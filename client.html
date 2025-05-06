@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h2>Streamed Data</h2>
+<pre id="output"></pre>
+
+<script>
+const output = document.getElementById('output');
+const evtSource = new EventSource("http://localhost:8080/stream");
+
+// Handle incoming messages
+evtSource.onmessage = function(e) {
+    output.textContent += e.data + "\n";
+};
+
+// Optional: log heartbeats (comment lines are ignored by onmessage)
+// But in case you want to confirm they are reaching the client:
+evtSource.onopen = function() {
+    console.log("Connection to server opened.");
+};
+
+evtSource.onerror = function(err) {
+    console.error("EventSource failed:", err);
+    evtSource.close();
+    output.textContent += "\n[Stream closed or error occurred]\n";
+};
+</script>
+</body>
+</html>
